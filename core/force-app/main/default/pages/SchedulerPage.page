@@ -1,0 +1,15 @@
+<apex:page standardController="SchedulerJob__c" recordSetVar="set" extensions="SchedulerPageExt">
+   <apex:form >
+      <apex:pageBlock title="Run Now" mode="edit">
+         <apex:pageMessages />
+         <apex:pageBlockButtons location="top">
+            <apex:commandButton value="Execute" action="{!run}"/>
+            <apex:commandButton value="Cancel" action="{!cancel}"/>
+         </apex:pageBlockButtons>
+         <apex:pageBlockTable value="{!selected}" var="s">
+            <apex:column value="{!s.Name}"/>
+            <apex:column value="{!s.On__c}"/>
+         </apex:pageBlockTable>
+      </apex:pageBlock>
+   </apex:form>
+</apex:page>

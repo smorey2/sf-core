@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>Provider__c</fullName>
+    <description>Provider</description>
+    <deleteConstraint>Restrict</deleteConstraint>
+    <externalId>false</externalId>
+    <label>Provider</label>
+    <referenceTo>SchedulerProvider__c</referenceTo>
+    <relationshipLabel>Jobs</relationshipLabel>
+    <relationshipName>Jobs</relationshipName>
+    <required>true</required>
+    <trackTrending>false</trackTrending>
+    <type>Lookup</type>
+</CustomField>
