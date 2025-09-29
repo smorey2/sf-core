@@ -8,9 +8,7 @@ global class TypeX {
     * @return Type
     */
     global static Type forName(String clsName) {
-        Type r = Type.forName(null, clsName);
-        if (r == null) r = Type.forName(clsName);
-        return r;
+        return Type.forName(null, clsName) ?? Type.forName(clsName);
     }
 
     /**

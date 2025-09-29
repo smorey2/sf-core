@@ -76,6 +76,24 @@ class SystemsTest {
           Test.stopTest();
 	}
 
+	@isTest static void Batch_then() {
+          Batch_setup();
+          Test.startTest();
+          new Batch('SELECT Id FROM Account WHERE Name = \'Test\'',
+               new Batch.Updatex(new Map<String, Object> {
+                    'Description' => 'Test 1'
+               })).then(
+          new Batch('SELECT Id FROM Account WHERE Name = \'Test\'',
+               new Batch.Updatex(new Map<String, Object> {
+                    'Description' => 'Test 2'
+               })).then(
+          new Batch('SELECT Id FROM Account WHERE Name = \'Test\'',
+               new Batch.Updatex(new Map<String, Object> {
+                    'Description' => 'Test 3'
+               })))).run();
+          Test.stopTest();
+	}
+
      //#endregion
 
      //#region GatewayLogger

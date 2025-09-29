@@ -2,8 +2,7 @@
 * a data column
 */
 global virtual class DataColumn {
-    global String field;
-    global String displayName;
+    global String field, displayName;
     global Boolean encode = true;
     global DataColumn() { }
     global DataColumn(String field) { this.field = field; }

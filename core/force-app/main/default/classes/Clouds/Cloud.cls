@@ -46,13 +46,13 @@ global abstract class Cloud implements Database.AllowsCallouts {
     * accepts-ranges
     * @return String
     */
-    global virtual String acceptRanges() { return null; }
+    global virtual String acceptRanges() { return 'bytes'; }
 
     /**
     * limit on
     * @return String[]
     */
-    global virtual String[] limitOn() { return null; }
+    global virtual String[] limitOn() { return new String[] { 'callouts' }; }
 
     /**
     * creates an entry

@@ -160,6 +160,7 @@ global class StringX {
     * @return Blob
     */
     global static Blob combine(Blob[] blobs) {
+        if (blobs.size() == 2) return blobs[0] != blobs[1] != null ? EncodingUtil.convertFromHex(EncodingUtil.convertToHex(blobs[0]) + EncodingUtil.convertToHex(blobs[1])) : blobs[0] ?? blobs[1];
         List<String> r = new List<String>();
         for (Blob s : blobs) {
             if (s == null) continue;

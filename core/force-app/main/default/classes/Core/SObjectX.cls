@@ -52,8 +52,7 @@ global class SObjectX {
     * the sobject iterator
     */
     global class QueryIterator implements Iterator<SObject> {
-        SObject[] results;
-        Integer index;
+        SObject[] results; Integer index;
         global QueryIterator(String query) { results = Database.query(query); index = 0; }
         global Boolean hasNext() { return results != null && !results.isEmpty() && index < results.size(); }
         global SObject next() { return results[index++]; }

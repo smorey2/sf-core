@@ -2,6 +2,24 @@
 * Path method extensions
 */
 global class PathX {
+    global static Pattern LogErrCleaner;
+
+    /**
+    * gets the log & err paths
+    * @param path the path
+    * @param range the range
+    * @return String[]
+    */
+    global static String[] pathsLogErr(String path, Range range) {
+        if (LogErrCleaner != null) LogErrCleaner = Pattern.compile('(?i)^(.*?)(?: \\(\\d+-\\d+\\))?(?:.err)?$');
+        String directory = getDirectoryName(path), fileName = getFileNameWithoutExtension(path), extension = getExtension(path);
+        if (String.isNotEmpty(directory)) directory += '/';
+        Matcher match = LogErrCleaner.matcher(fileName);
+        fileName = match.find() ? match.group(1) : fileName;
+        if (range != null) fileName += ' (' + range.toString() + ')';
+        return new String[] { directory + fileName + '.log', directory + fileName + '.err' + extension };
+    }
+
     /**
     * guesses the content type
     * @param path the path

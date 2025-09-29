@@ -32,18 +32,6 @@ global class CloudAws extends Cloud {
     }
 
     /**
-    * accepts-ranges
-    * @return String
-    */
-    global override String acceptRanges() { return 'bytes'; }
-
-    /**
-    * limit on
-    * @return String[]
-    */
-    global override String[] limitOn() { return new String[] { 'callouts' }; }
-
-    /**
     * copies an object
     * @param path the path
     * @param newPath the new path

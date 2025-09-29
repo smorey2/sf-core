@@ -229,12 +229,11 @@ class CoreTest {
 
     //#region Dml
 
-    @isTest static void Dml_clear() {
+    @isTest static void Dml_all() {
         Dml.clear();
-    }
-
-    @isTest static void Dml_flush() {
         Dml.flush();
+        Dml.flush(null);
+        Dml.flush(null, true);
     }
 
     //#endregion
@@ -896,15 +895,12 @@ class CoreTest {
         System.assertEquals(3, actual3Size, 'Should be value');
     }
 
-    @isTest static void SObjectX_QueryIterable() {
-        Iterable<SObject> actual = new SObjectX.QueryIterable('SELECT Id FROM ApexClass LIMIT 1');
-        System.assert(actual.Iterator() != null, 'Should be value');
-    }
-
-    @isTest static void SObjectX_QueryIterator() {
-        Iterator<SObject> actual = new SObjectX.QueryIterator('SELECT Id FROM ApexClass LIMIT 1');
-        System.assert(actual.hasNext() == true, 'Should be value');
-        System.assert(actual.next() != null, 'Should be value');
+    @isTest static void SObjectX_QueryItera() {
+        Iterable<SObject> actual1 = new SObjectX.QueryIterable('SELECT Id FROM ApexClass LIMIT 1');
+        Iterator<SObject> actual2 = new SObjectX.QueryIterator('SELECT Id FROM ApexClass LIMIT 1');
+        System.assert(actual1.Iterator() != null, 'Should be value');
+        System.assert(actual2.hasNext() == true, 'Should be value');
+        System.assert(actual2.next() != null, 'Should be value');
     }
 
     @isTest static void SObjectX_GroupAt() {

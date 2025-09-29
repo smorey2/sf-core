@@ -69,6 +69,13 @@ global class Core {
     global static Object throwx(String message) { throw new HandledException(message); }
 
     /**
+    * str
+    * @param source the source
+    * @return String
+    */
+    global static String strval(String source) { return source != null ? '\'' + source.replace('\'', '\'\'') + '\'' : 'null'; }
+
+    /**
     * spinlocks the thread
     * @param milliseconds the duration in milliseconds
     */
@@ -178,9 +185,9 @@ global class Core {
     global static Object getSingleton(Type klass) {
         Object r = singletons.get(klass);
         if (r != null) return r;
-        String klassName = 'App' + klass.getName().replace('xs.', '').replace('Default', '');
-        Type t = disableAppSingleton != true ? TypeX.forName(klassName) ?? klass : klass;
-        if (t == null) throw new HandledException('getSingleton(type) requires a class named "' + klassName + '" to exist, please create.');
+        String clsName = 'App' + klass.getName().replace('xs.', '').replace('Default', '');
+        Type t = disableAppSingleton != true ? Type.forName(null, clsName) ?? Type.forName(clsName) ?? klass : klass;
+        if (t == null) throw new HandledException('getSingleton(type) requires a class named "' + clsName + '" to exist, please create.');
         r = t.newInstance();
         singletons.put(klass, r);
         return r;

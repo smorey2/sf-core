@@ -233,6 +233,7 @@ global virtual class Batch implements Database.Batchable<SObject> {
     global Integer batchSize;
     global Boolean allOrNone = true;
     global final List<ExObj> exceptions = new List<ExObj>();
+    global Batch next;
 
     /**
     * a batchable implementation
@@ -264,6 +265,12 @@ global virtual class Batch implements Database.Batchable<SObject> {
     global Batch(String query, Action action, Integer batchSize, Boolean allOrNone) { this(query, action); this.batchSize = batchSize; this.allOrNone = allOrNone; }
 
     /**
+    * then
+    * @return Batch 
+    */
+    global Batch then(Batch next) { this.next = next; return this; }
+
+    /**
     * run
     * @return String 
     */
@@ -290,7 +297,7 @@ global virtual class Batch implements Database.Batchable<SObject> {
     * batchable finish
     * @param bc the batchable context
     */
-    global void finish(Database.BatchableContext bc) { }
+    global void finish(Database.BatchableContext bc) { next?.run(); }
 
     /**
     * handle exceptions
@@ -307,6 +314,7 @@ global virtual class Batch implements Database.Batchable<SObject> {
         global Integer batchSize;
         global Boolean allOrNone = true;
         global final List<ExObj> exceptions = new List<ExObj>();
+        global Batch next;
 
         /**
         * a schedulable implementation
@@ -353,6 +361,7 @@ global virtual class Batch implements Database.Batchable<SObject> {
             while (it.hasNext()) scope.add(it.next());
             action?.execute(sc, scope, allOrNone, exceptions);
             if (!exceptions.isEmpty()) handle(exceptions);
+            next?.run();
         }
 
         /**
@@ -371,6 +380,7 @@ global virtual class Batch implements Database.Batchable<SObject> {
         global Integer batchSize;
         global Boolean allOrNone = true;
         global final List<ExObj> exceptions = new List<ExObj>();
+        global Batch next;
 
         /**
         * a queueable implementation
@@ -417,6 +427,7 @@ global virtual class Batch implements Database.Batchable<SObject> {
             while (it.hasNext()) scope.add(it.next());
             action?.execute(qc, scope, this.allOrNone, exceptions);
             if (!exceptions.isEmpty()) handle(exceptions);
+            next?.run();
         }
 
         /**
