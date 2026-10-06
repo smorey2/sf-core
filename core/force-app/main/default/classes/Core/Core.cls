@@ -4,7 +4,6 @@
 global class Core {
     global static Boolean disableAppSingleton;
     global static final Map<Type, Object> singletons = new Map<Type, Object>();
-    global static DefaultOptions options = (DefaultOptions)getSingleton(DefaultOptions.class);
 
     /**
     * an internal class used by ExecuteJob()

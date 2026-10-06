@@ -22,20 +22,17 @@ global class HttpX implements Database.AllowsCallouts {
             switch on key {
                 when 'method' { req.setMethod(String.valueOf(value)); }
                 when 'endpoint' { req.setEndpoint(endpoint + String.valueOf(value)); }
-                when 'body' {
-                    if (value instanceOf String) req.setBody((String)value);
-                    else req.setBody(JSON.serialize(value, true));
-                }
+                when 'body' { req.setBody(value instanceOf String ? (String)value : JSON.serialize(value, true)); }
                 when else { req.setHeader(key, String.valueOf(value)); }
             }
         }
         HttpResponse res;
         try { res = new Http().send(req); }
         catch (Exception e) {
-            String errorMessage = e.getMessage() + '\n' + e.getStackTraceString();
-            SystemX.debug(errorMessage);
+            String msg = e.getMessage() + '\n' + e.getStackTraceString();
+            SystemX.debug(msg);
             res = new HttpResponse();
-            res.setBody(errorMessage);
+            res.setBody(msg);
             res.setStatusCode(500);
         }
 		return res;

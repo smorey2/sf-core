@@ -27,17 +27,17 @@ global class HttpMultiMock implements System.HttpCalloutMock {
     * @param request the request
     */
     global HttpResponse respond(HttpRequest request) {
-        String name, errorMessage;
+        String name, msg;
         if (variant == null) {
-            name = request.getEndpoint(); errorMessage = 'Mock not found for endpoint: ' + name;
+            name = request.getEndpoint(); msg = 'Mock not found for endpoint: ' + name;
         }
         else if (variant.startsWithIgnoreCase('header:')) {
             String header = variant.substring(7);
-            name = request.getHeader(header); errorMessage = 'Mock not found for header: ' + header + ':' + name;
+            name = request.getHeader(header); msg = 'Mock not found for header: ' + header + ':' + name;
         }
         else throw new HandledException('Unknown variant: ' + variant);
         System.HttpCalloutMock mock = mocks.get(name);
         if (mock != null) return mock.respond(request);
-        else throw new HandledException(errorMessage);
+        else throw new HandledException(msg);
     }
 }

@@ -39,7 +39,7 @@ global class UserInfoX {
     * @return User
     */
     global static User getServiceUser(String type) {
-        String alias = Core.options.serviceUserAlias(type);
+        String alias = CoreOptions.get.serviceUserAlias(type);
         return alias != null ? [SELECT Id, Name FROM User WHERE Alias = :alias LIMIT 1] : null;
     }
 }

@@ -111,23 +111,23 @@ global abstract class GatewayLogger {
 
     /**
     * includes the gateway message
-    * @param gatewayMessage the gateway message
+    * @param msg the message
     * @return GatewayLogger
     */
-    global GatewayLogger withGatewayMessage(String gatewayMessage) {
-        if (gatewayMessage == null || !String.isNotBlank(gatewayMessage)) return this;
-        log.put(fields.get(Field.GatewayMessage), StringX.clamp(gatewayMessage, 255));
+    global GatewayLogger withGatewayMessage(String msg) {
+        if (msg == null || !String.isNotBlank(msg)) return this;
+        log.put(fields.get(Field.GatewayMessage), StringX.clamp(msg, 255));
         return this;
     }
 
     /**
     * includes the error message
-    * @param errorMessage the error message
+    * @param msg the message
     * @return GatewayLogger
     */
-    global GatewayLogger withErrorMessage(String errorMessage) {
-        if (errorMessage == null || !String.isNotBlank(errorMessage)) return this;
-        log.put(fields.get(Field.ErrorMessage), StringX.clamp(errorMessage, 131072, '...'));
+    global GatewayLogger withErrorMessage(String msg) {
+        if (msg == null || !String.isNotBlank(msg)) return this;
+        log.put(fields.get(Field.ErrorMessage), StringX.clamp(msg, 131072, '...'));
         return this;
     }
 

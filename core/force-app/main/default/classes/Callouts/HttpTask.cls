@@ -7,6 +7,8 @@ global abstract class HttpTask {
     global Object arg;
     global String successMessage;
     global String errorMessage;
+    global Boolean halt;
+    global String base;
     global List<Tuple2> pragmas;
     global String proxy;
     global Tuple4 log;
@@ -36,6 +38,20 @@ global abstract class HttpTask {
     }
 
     //#region fluent
+
+    /**
+    * halt
+    * @param halt the halt
+    * @return HttpTask
+    */
+    global HttpTask halt(Boolean halt) { this.halt = halt; return this; }
+
+    /**
+    * base
+    * @param base the base
+    * @return HttpTask
+    */
+    global HttpTask base(String base) { this.base = base; return this; }
 
     /**
     * sets the pragma

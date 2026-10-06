@@ -194,8 +194,7 @@ global virtual class HttpBatch {
     */
     global virtual void rollback() {
         if (rollbacks.isEmpty()) return;
-        SystemX.debug('- ROLLBACK -');
-        log?.logInfo(name, '- ROLLBACK -');
+        SystemX.debug('- ROLLBACK -'); log?.logInfo(name, '- ROLLBACK -');
         for (Integer i = rollbacks.size() - 1; i >= 0; i--) {
             HttpTask s = rollbacks[i];
             SystemX.debug('roll:' + String.valueOf(s.request).substringBefore(':'));

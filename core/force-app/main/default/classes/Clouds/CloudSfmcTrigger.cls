@@ -80,7 +80,7 @@ global abstract class CloudSfmcTrigger implements Schedulable, Database.AllowsCa
     * @param ctx the trigger context
     */ 
     global virtual HttpResponse post(Context ctx) {
-        String errorMessage = null;
+        String msg = null;
         HttpResponse res = null;
         Map<String, Object> req;
         try {
@@ -101,8 +101,8 @@ global abstract class CloudSfmcTrigger implements Schedulable, Database.AllowsCa
             // res = CloudX.callout((String)ctx.accessToken.get('rest_instance_url'), ctx.accessToken, req);
             // if (res != null) { SystemX.debug(res.getStatus() + ': ' + res.getBody()); }
         }
-        catch (Exception e) { errorMessage = e.getMessage() + '\n' + e.getStackTraceString(); SystemX.debug(System.LoggingLevel.ERROR, errorMessage); }
-        finally { postProcess(ctx, req, res, errorMessage); }
+        catch (Exception e) { msg = e.getMessage() + '\n' + e.getStackTraceString(); SystemX.debug(System.LoggingLevel.ERROR, msg); }
+        finally { postProcess(ctx, req, res, msg); }
         return res;
     }
 

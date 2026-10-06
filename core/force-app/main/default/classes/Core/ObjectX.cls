@@ -59,7 +59,7 @@ global class ObjectX {
                 // Set<Object> ks = getCache.keySet();
                 // for (Integer i = 3; i < ks.size(); i++) { getCache.remove(ks[i]); }
             }
-            s = Core.options.untype(obj);
+            s = CoreOptions.get.untype(obj);
             untypeCache.put(obj, s);
         }
         return s;
@@ -79,7 +79,7 @@ global class ObjectX {
         if (obj == null) return null;
         else if (obj instanceof Map<String, Object>) return MapX.get((Map<String, Object>)obj, field);
         else if (obj instanceof SObject) return SObjectX.get((SObject)obj, field);
-        Map<String, Object> s = Core.options.untype(obj);
+        Map<String, Object> s = CoreOptions.get.untype(obj);
         String[] arg = field.split('\\.', 2);
         return arg.size() > 1
              ? get(s.get(arg[0]), arg[1])
@@ -94,7 +94,7 @@ global class ObjectX {
     * @return Object
     */
     global static Object get(Object obj, String field, String modifier) {
-        return Core.options.funcValue(field.startsWith('.') ? Core.options.funcGlobal(field.substring(1)) : get(obj, field), modifier);
+        return CoreOptions.get.funcValue(field.startsWith('.') ? CoreOptions.get.funcGlobal(field.substring(1)) : get(obj, field), modifier);
     }
 
     /**
@@ -180,57 +180,33 @@ global class ObjectX {
         Integer partsSize = r.size(); Object v; String k, f;
         if (obj instanceof List<SObject>) {
             List<SObject> s = (List<SObject>)obj;
-            if (partsSize == 2) {
-                k = r[1].substringBefore(':'); f = r[1].substringAfter(':'); v = SObjectX.get(s[k != '' ? Integer.valueOf(k) : 0], f.substringBefore(';'), f.substringAfter(';')); return r[0] == '' ? v : r[0] + String.valueOf(v ?? '');
-            }
-            for (Integer i = 0; i < partsSize - 1; i += 2) {
-                k = r[i + 1].substringBefore(':'); f = r[i + 1].substringAfter(':'); v = SObjectX.get(s[k != '' ? Integer.valueOf(k) : 0], f.substringBefore(';'), f.substringAfter(';')); r[i + 1] = String.valueOf(v ?? '');
-            }
+            if (partsSize == 2) { k = r[1].substringBefore(':'); f = r[1].substringAfter(':'); v = SObjectX.get(s[k != '' ? Integer.valueOf(k) : 0], f.substringBefore(';'), f.substringAfter(';')); return r[0] == '' ? v : r[0] + String.valueOf(v ?? ''); }
+            for (Integer i = 0; i < partsSize - 1; i += 2) { k = r[i + 1].substringBefore(':'); f = r[i + 1].substringAfter(':'); v = SObjectX.get(s[k != '' ? Integer.valueOf(k) : 0], f.substringBefore(';'), f.substringAfter(';')); r[i + 1] = String.valueOf(v ?? ''); }
         }
         else if (obj instanceof List<Map<String, Object>>) {
             List<Map<String, Object>> s = (List<Map<String, Object>>)obj;
-            if (partsSize == 2) {
-                k = r[1].substringBefore(':'); f = r[1].substringAfter(':'); v = MapX.get(s[k != '' ? Integer.valueOf(k) : 0], f.substringBefore(';'), f.substringAfter(';')); return r[0] == '' ? v : r[0] + String.valueOf(v ?? '');
-            }
-            for (Integer i = 0; i < partsSize - 1; i += 2) {
-                k = r[i + 1].substringBefore(':'); f = r[i + 1].substringAfter(':'); v = MapX.get(s[k != '' ? Integer.valueOf(k) : 0], f.substringBefore(';'), f.substringAfter(';')); r[i + 1] = String.valueOf(v ?? '');
-            }
+            if (partsSize == 2) { k = r[1].substringBefore(':'); f = r[1].substringAfter(':'); v = MapX.get(s[k != '' ? Integer.valueOf(k) : 0], f.substringBefore(';'), f.substringAfter(';')); return r[0] == '' ? v : r[0] + String.valueOf(v ?? ''); }
+            for (Integer i = 0; i < partsSize - 1; i += 2) { k = r[i + 1].substringBefore(':'); f = r[i + 1].substringAfter(':'); v = MapX.get(s[k != '' ? Integer.valueOf(k) : 0], f.substringBefore(';'), f.substringAfter(';')); r[i + 1] = String.valueOf(v ?? ''); }
         }
         else if (obj instanceof List<Object>) {
             List<Object> s = (List<Object>)obj;
-            if (partsSize == 2) {
-                k = r[1].substringBefore(':'); f = r[1].substringAfter(':'); v = ObjectX.get(s[k != '' ? Integer.valueOf(k) : 0], f.substringBefore(';'), f.substringAfter(';')); return r[0] == '' ? v : r[0] + String.valueOf(v ?? '');
-            }
-            for (Integer i = 0; i < partsSize - 1; i += 2) {
-                k = r[i + 1].substringBefore(':'); f = r[i + 1].substringAfter(':'); v = ObjectX.get(s[k != '' ? Integer.valueOf(k) : 0], f.substringBefore(';'), f.substringAfter(';')); r[i + 1] = String.valueOf(v ?? '');
-            }
+            if (partsSize == 2) { k = r[1].substringBefore(':'); f = r[1].substringAfter(':'); v = ObjectX.get(s[k != '' ? Integer.valueOf(k) : 0], f.substringBefore(';'), f.substringAfter(';')); return r[0] == '' ? v : r[0] + String.valueOf(v ?? ''); }
+            for (Integer i = 0; i < partsSize - 1; i += 2) { k = r[i + 1].substringBefore(':'); f = r[i + 1].substringAfter(':'); v = ObjectX.get(s[k != '' ? Integer.valueOf(k) : 0], f.substringBefore(';'), f.substringAfter(';')); r[i + 1] = String.valueOf(v ?? ''); }
         }
         else if (obj instanceof SObject) {
             SObject s = (SObject)obj;
-            if (partsSize == 2) {
-                f = r[1]; v = SObjectX.get(s, f.substringBefore(';'), f.substringAfter(';')); return r[0] == '' ? v : r[0] + String.valueOf(v ?? '');
-            }
-            for (Integer i = 0; i < partsSize - 1; i += 2) {
-                f = r[i + 1]; v = SObjectX.get(s, f.substringBefore(';'), f.substringAfter(';')); r[i + 1] = String.valueOf(v ?? '');
-            }
+            if (partsSize == 2) { f = r[1]; v = SObjectX.get(s, f.substringBefore(';'), f.substringAfter(';')); return r[0] == '' ? v : r[0] + String.valueOf(v ?? ''); }
+            for (Integer i = 0; i < partsSize - 1; i += 2) { f = r[i + 1]; v = SObjectX.get(s, f.substringBefore(';'), f.substringAfter(';')); r[i + 1] = String.valueOf(v ?? ''); }
         }
         else if (obj instanceof Map<String, Object>) {
             Map<String, Object> s = (Map<String, Object>)obj;
-            if (partsSize == 2) {
-                f = r[1]; v = MapX.get(s, f.substringBefore(';'), f.substringAfter(';')); return r[0] == '' ? v : r[0] + String.valueOf(v ?? '');
-            }
-            for (Integer i = 0; i < partsSize - 1; i += 2) {
-                f = r[i + 1]; v = MapX.get(s, f.substringBefore(';'), f.substringAfter(';')); r[i + 1] = String.valueOf(v ?? '');
-            }
+            if (partsSize == 2) { f = r[1]; v = MapX.get(s, f.substringBefore(';'), f.substringAfter(';')); return r[0] == '' ? v : r[0] + String.valueOf(v ?? ''); }
+            for (Integer i = 0; i < partsSize - 1; i += 2) { f = r[i + 1]; v = MapX.get(s, f.substringBefore(';'), f.substringAfter(';')); r[i + 1] = String.valueOf(v ?? ''); }
         }
         else {
             Object s = (Object)obj;
-            if (partsSize == 2) {
-                f = r[1]; v = ObjectX.get(s, f.substringBefore(';'), f.substringAfter(';')); return r[0] == '' ? v : r[0] + String.valueOf(v ?? '');
-            }
-            for (Integer i = 0; i < partsSize - 1; i += 2) {
-                f = r[i + 1]; v = ObjectX.get(s, f.substringBefore(';'), f.substringAfter(';')); r[i + 1] = String.valueOf(v ?? '');
-            }
+            if (partsSize == 2) { f = r[1]; v = ObjectX.get(s, f.substringBefore(';'), f.substringAfter(';')); return r[0] == '' ? v : r[0] + String.valueOf(v ?? ''); }
+            for (Integer i = 0; i < partsSize - 1; i += 2) { f = r[i + 1]; v = ObjectX.get(s, f.substringBefore(';'), f.substringAfter(';')); r[i + 1] = String.valueOf(v ?? ''); }
         }
         return String.join(r, '');
     }

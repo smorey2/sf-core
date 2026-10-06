@@ -344,7 +344,10 @@ class CloudsTest {
 
     //#endregion
 
+    //#region CloudSPo
     
+    //#endregion
+
     // @isTest static void shouldCreateContentXReadFinish() {
     //     Cloud cloud = setupXSfdc();
     //     List<Cloud.File> entries = cloud.listx('order', 'file;size');

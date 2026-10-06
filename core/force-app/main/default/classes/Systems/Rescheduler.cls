@@ -52,7 +52,7 @@ global virtual class Rescheduler implements Schedulable {
     */
     global virtual List<Job> getJobs() {
         List<Job> jobs = new List<Job>();
-        for (ReschedulerJob__mdt s : [SELECT Id, ApexAdapter__c, ApexArgs__c, BatchSize__c, Minutes__c FROM ReschedulerJob__mdt WHERE ApexAdapter__c != null]) {
+        for (Job__mdt s : [SELECT Id, ApexAdapter__c, ApexArgs__c, BatchSize__c, Minutes__c FROM Job__mdt WHERE ApexAdapter__c != null]) {
             Double minutes = s.Minutes__c != null ? s.Minutes__c.doubleValue() : 1.0;
             Type type = TypeX.forName(s.ApexAdapter__c);
             if (type == null) { SystemX.debug('Missing ApexAdapter: ' + s.ApexAdapter__c); continue; }
@@ -112,7 +112,7 @@ global virtual class Rescheduler implements Schedulable {
             if (job == null || !shouldExecute(job.minutes)) continue;
 
             // check if schedule
-            if (job.klass == Scheduler.class) { Scheduler.run(this); continue; }
+            if (job.klass == TaskManager.class) { TaskManager.run(this); continue; }
 
             // create klass
             Type klass = job.klass;

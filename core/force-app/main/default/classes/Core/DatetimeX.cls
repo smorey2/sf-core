@@ -11,6 +11,7 @@ global class DatetimeX {
     * @return Datetime
     */
     global static Datetime addMinutes(Datetime s, Double additionalMinutes) {
+        if (additionalMinutes == 0.0) return s;
         Integer minutes = (Integer)additionalMinutes, seconds = (Integer)(Math.abs(additionalMinutes - additionalMinutes.intValue()) * 60.0);
         if (minutes != 0) s.addMinutes(minutes);
         if (seconds != 0) s.addSeconds(seconds);

@@ -2,8 +2,7 @@
 * http rest task
 */
 global virtual class HttpRestTask extends HttpTask {
-    String newToken;
-    String base;
+    // String newToken;
     Type responseType;
     global HttpRestTask(Object request, Type responseType, String endpoint, String successMessage, String errorMessage) { super(request, endpoint, successMessage, errorMessage); this.responseType = responseType; }
 
@@ -42,14 +41,17 @@ global virtual class HttpRestTask extends HttpTask {
     */
     global override Object callout(HttpBatch batch) {
         HttpRequest req = new HttpRequest(); logRequest = req;
-        String endpoint = base != null && base != 'sites' ? base : Url.getOrgDomainUrl().toExternalForm(), token, authorization = 'Bearer ' + (token = token());
-        if (base == 'sites') endpoint = endpoint.replace('my.salesforce.com', 'my.salesforce-sites.com');
+        // String sessionId = newSessionId ?? UserInfo.getSessionId();
+        // String authorization = 'Bearer ' + sessionId;
+        // String endpoint = base != null && base != 'sites' ? base : Url.getOrgDomainUrl().toExternalForm(), token, authorization = 'Bearer ' + (token = token());
+        String endpoint = base != null && !base.startsWith('sites') ? base : Url.getOrgDomainUrl().toExternalForm();
+        if (base != null && base.startsWith('sites')) endpoint = endpoint.replace('my.salesforce.com', 'my.salesforce-sites.com') + base.substring(5);
 		req.setMethod('POST');
         req.setHeader('Accept', '*/*');
 		req.setHeader('Content-Type', 'application/json; charset=UTF-8');
 		req.setHeader('User-Agent', 'Rest/v1.0 (Language=Apex)');
-		req.setHeader('Authorization', authorization);
-		req.setHeader('Authorization2', authorization);
+		// req.setHeader('Authorization', authorization);
+		// req.setHeader('Authorization2', authorization);
         if (proxy != null) { req.setEndpoint(proxy); req.setHeader('Endpoint', endpoint + arg); }
         else req.setEndpoint(endpoint + arg);
 		req.setBody(JSON.serialize(request, true));
@@ -58,20 +60,22 @@ global virtual class HttpRestTask extends HttpTask {
 		// send request
         HttpResponse res; String body = null;
 		try {
+            if (halt == true) throw new HandledException('Halt');
             for (Integer call = 2; call > 0; call--) {
 			    res = new Http().send(req); logResponse = res;
                 body = res.getBody();
-                if (body.contains('[{"message":"INVALID_AUTH_HEADER","errorCode":"INVALID_AUTH_HEADER"}]') ||
-                    body.contains('[{"message":"Session expired or invalid","errorCode":"INVALID_SESSION_ID"}]')) {
-                    if (call == 2) {
-                        authorization = 'Bearer ' + (token = newToken = refreshToken(token));
-                        req.setHeader('Authorization', authorization);
-                        req.setHeader('Authorization2', authorization);
-                        continue;
-                    }
-                    else throw new HandledException('Pending: Session expired or invalid');
-                }
-                else if (body.startsWith('RejectedCallException:')) throw new HandledException(body);
+                // if (body.contains('[{"message":"INVALID_AUTH_HEADER","errorCode":"INVALID_AUTH_HEADER"}]') ||
+                //     body.contains('[{"message":"Session expired or invalid","errorCode":"INVALID_SESSION_ID"}]')) {
+                //     if (call == 2) {
+                //         authorization = 'Bearer ' + (token = newToken = refreshToken(token));
+                //         req.setHeader('Authorization', authorization);
+                //         req.setHeader('Authorization2', authorization);
+                //         continue;
+                //     }
+                //     else throw new HandledException('Pending: Session expired or invalid');
+                // }
+                // else
+                if (body.startsWith('RejectedCallException:')) throw new HandledException(body);
                 break;
             }
             Object obj = res.getStatusCode() == 200
@@ -86,8 +90,8 @@ global virtual class HttpRestTask extends HttpTask {
         }
     }
 	
-    public virtual String token() { return newToken ?? UserInfo.getSessionId(); }
-    public virtual String refreshToken(String token) { return SelfService.getSessionId(); }
+    // public virtual String token() { return newToken ?? UserInfo.getSessionId(); }
+    // public virtual String refreshToken(String token) { return SelfService.getSessionId(); }
 
     //#endregion
 }

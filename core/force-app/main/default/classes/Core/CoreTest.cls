@@ -130,7 +130,7 @@ class CoreTest {
 
     @isTest static void Core_getSingleton() {
         Test.startTest();
-        DefaultOptions actual = (DefaultOptions)Core.getSingleton(DefaultOptions.class);
+        CoreOptions actual = (CoreOptions)Core.getSingleton(CoreOptions.class);
         Test.stopTest();
         System.assert(actual != null, 'Should be value');
     }
@@ -181,6 +181,26 @@ class CoreTest {
         Test.stopTest();
 	}
 
+    @isTest static void DatabaseX_QueryIterator() {
+        Iterable<SObject> actual1 = new DatabaseX.QueryIterable('SELECT Id FROM ApexClass LIMIT 1');
+        Iterator<SObject> actual2 = new DatabaseX.QueryIterator('SELECT Id FROM ApexClass LIMIT 1');
+        System.assert(actual1.Iterator() != null, 'Should be value');
+        System.assert(actual2.hasNext() == true, 'Should be value');
+        System.assert(actual2.next() != null, 'Should be value');
+    }
+
+    @isTest static void DatabaseX_Query() {
+        DatabaseX.Query actual1 = new DatabaseX.Query(new String[] { 'Id', '#ApexClass', 'limit:1' });
+        DatabaseX.Query actual2 = new DatabaseX.Query(new String[] { 'Id', '#ApexClass', '+action', ':x', 'in:x', 'and:x', 'or:x', 'and(:x', 'or(:x', '):x', 'groupby:x', 'having:x', 'limit:1' });
+        List<ApexClass> sources = actual1.query();
+        System.assertEquals(actual1.keyField, 'Id', 'Should be value');
+        System.assert(actual1.rel(sources[0]) != null, 'Should be value');
+        System.assert(actual1.get(sources[0], 0, null) != null, 'Should be value');
+        System.assert(actual1.get(sources, 0, null) != null, 'Should be value');
+        System.assertEquals(actual1.fromx, 'ApexClass', 'Should be value');
+        System.assertEquals(actual2.fromx, 'ApexClass', 'Should be value');
+    }
+
     //#endregion
 
     //#region DatetimeX
@@ -214,13 +234,13 @@ class CoreTest {
 
     //#endregion
 
-    //#region DefaultOptions
+    //#region CoreOptions
 
     @isTest static void DefaultOptions_new() {
         Test.startTest();
-        DefaultOptions option = new DefaultOptions();
+        CoreOptions option = new CoreOptions();
         option.serviceUserAlias(null);
-        DefaultOptions actual = Core.options;
+        CoreOptions actual = CoreOptions.get;
         Test.stopTest();
         System.assert(actual != null, 'Should be value');
     }
@@ -232,8 +252,18 @@ class CoreTest {
     @isTest static void Dml_all() {
         Dml.clear();
         Dml.flush();
-        Dml.flush(null);
-        Dml.flush(null, true);
+        Dml.flush(true);
+    }
+
+    //#endregion
+
+    //#region Dml2
+
+    @isTest static void Dml2_all() {
+        Dml2.clear();
+        Dml2.flush();
+        Dml2.flush(null);
+        Dml2.flush(null, true);
     }
 
     //#endregion
@@ -575,18 +605,18 @@ class CoreTest {
 
     @isTest static void MapX_getIds() {
         Account obj = new Account(Name='Account'); insert obj;
-        Map<Id, SObject> actual1 = MapX.getIds(new SObject[] { obj }, 'Id');
-        Map<Id, List<SObject>> actual2 = MapX.getIdSet(new SObject[] { obj }, 'Id');
-        System.assertEquals(1, actual1.size(), 'Should be value');
-        System.assertEquals(1, actual2.size(), 'Should be value');
+        Map<Id, SObject> actual1a = MapX.getIds(new SObject[] { obj }, 'Id'); Map<Id, Object> actual1b = MapX.getIds(new SObject[] { obj }, 'Id', 'Id');
+        Map<Id, List<SObject>> actual2a = MapX.getIdSet(new SObject[] { obj }, 'Id'); Map<Id, List<Object>> actual2b = MapX.getIdSet(new SObject[] { obj }, 'Id', 'Id');
+        System.assertEquals(1, actual1a.size(), 'Should be value'); System.assertEquals(1, actual1b.size(), 'Should be value');
+        System.assertEquals(1, actual2a.size(), 'Should be value'); System.assertEquals(1, actual2b.size(), 'Should be value');
     }
 
     @isTest static void MapX_getStrings() {
         Account obj = new Account(Name='Account');
-        Map<String, SObject> actual1 = MapX.getStrings(new SObject[] { obj }, 'Name');
-        Map<String, List<SObject>> actual2 = MapX.getStringSet(new SObject[] { obj }, 'Name');
-        System.assertEquals(1, actual1.size(), 'Should be value');
-        System.assertEquals(1, actual2.size(), 'Should be value');
+        Map<String, SObject> actual1a = MapX.getStrings(new SObject[] { obj }, 'Name'); Map<String, Object> actual1b = MapX.getStrings(new SObject[] { obj }, 'Name', 'Name');
+        Map<String, List<SObject>> actual2a = MapX.getStringSet(new SObject[] { obj }, 'Name'); Map<String, List<Object>> actual2b = MapX.getStringSet(new SObject[] { obj }, 'Name', 'Name');
+        System.assertEquals(1, actual1a.size(), 'Should be value'); System.assertEquals(1, actual1b.size(), 'Should be value');
+        System.assertEquals(1, actual2a.size(), 'Should be value'); System.assertEquals(1, actual2b.size(), 'Should be value');
     }
 
     @isTest static void MapX_invert() {

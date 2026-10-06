@@ -2,6 +2,8 @@
 * Set extensions
 */
 global class SetX {
+    //#region Transpose
+
     /**
     * gets the sobject's ids as set
     * @param objs the IdObjs
@@ -39,6 +41,7 @@ global class SetX {
     /**
     * gets the sobject's strings as set
     * @param objs the SObjects
+    * @param field the field
     * @return Set<String>
     */
     global static Set<String> getStrings(List<SObject> objs, String field) {
@@ -48,4 +51,6 @@ global class SetX {
         else for (SObject s : objs) r.add((String)SObjectX.get(s, field));
         return r;
     }
+
+    //#endregion
 }

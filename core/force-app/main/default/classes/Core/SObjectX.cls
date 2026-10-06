@@ -84,7 +84,7 @@ global class SObjectX {
     * @return Object
     */
     global static Object get(SObject obj, String field, String modifier) {
-        return Core.options.funcValue(field.startsWith('.') ? Core.options.funcGlobal(field.substring(1)) : get(obj, field), modifier);
+        return CoreOptions.get.funcValue(field.startsWith('.') ? CoreOptions.get.funcGlobal(field.substring(1)) : get(obj, field), modifier);
     }
 
     /**

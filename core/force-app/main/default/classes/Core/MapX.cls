@@ -26,7 +26,7 @@ global class MapX {
     * @return Object
     */
     global static Object get(Map<String, Object> obj, String field, String modifier) {
-        return Core.options.funcValue(field.startsWith('.') ? Core.options.funcGlobal(field.substring(1)) : get(obj, field), modifier);
+        return CoreOptions.get.funcValue(field.startsWith('.') ? CoreOptions.get.funcGlobal(field.substring(1)) : get(obj, field), modifier);
     }
 
     /**
@@ -85,6 +85,20 @@ global class MapX {
         else for (SObject s : objs) r.put((Id)ObjectX.get(s, field), s);
         return r;
     }
+    /**
+    * gets the sobject's ids
+    * @param objs the SObjects
+    * @param field the field
+    * @param field2 the field2
+    * @return Map<Id, Object>
+    */
+    global static Map<Id, Object> getIds(List<SObject> objs, String field, String field2) {
+        Boolean fast = !field.contains('.'), fast2 = !field.contains('.');
+        Map<Id, Object> r = new Map<Id, Object>();
+        if (fast) for (SObject s : objs) r.put((Id)s.get(field), fast2 ? s.get(field2) : ObjectX.get(s, field2));
+        else for (SObject s : objs) r.put((Id)ObjectX.get(s, field), fast2 ? s.get(field2) : ObjectX.get(s, field2));
+        return r;
+    }
 
     /**
     * gets the sobject's ids as set
@@ -102,6 +116,23 @@ global class MapX {
         }
         return r;
     }
+    /**
+    * gets the sobject's ids as set
+    * @param objs the SObjects
+    * @param field the field
+    * @param field2 the field2
+    * @return Map<Id, SObject>
+    */
+    global static Map<Id, List<Object>> getIdSet(List<SObject> objs, String field, String field2) {
+        Boolean fast = !field.contains('.'), fast2 = !field.contains('.');
+        Map<Id, List<Object>> r = new Map<Id, List<Object>>();
+        for (SObject s : objs) {
+            Id key = (Id)(fast ? s.get(field) : ObjectX.get(s, field));
+            if (!r.containsKey(key)) r.put(key, new List<Object> { fast2 ? s.get(field2) : ObjectX.get(s, field2) });
+            else r.get(key).add(fast2 ? s.get(field2) : ObjectX.get(s, field2));
+        }
+        return r;
+    }
 
     /**
     * gets the sobject's strings
@@ -114,6 +145,20 @@ global class MapX {
         Map<String, SObject> r = new Map<String, SObject>();
         if (fast) for (SObject s : objs) r.put((String)s.get(field), s);
         else for (SObject s : objs) r.put((String)ObjectX.get(s, field), s);
+        return r;
+    }
+    /**
+    * gets the sobject's strings
+    * @param objs the SObjects
+    * @param field the field
+    * @param field2 the field2
+    * @return Map<String, SObject>
+    */
+    global static Map<String, Object> getStrings(List<SObject> objs, String field, String field2) {
+        Boolean fast = !field.contains('.'), fast2 = !field.contains('.');
+        Map<String, Object> r = new Map<String, Object>();
+        if (fast) for (SObject s : objs) r.put((String)s.get(field), fast2 ? s.get(field2) : ObjectX.get(s, field2));
+        else for (SObject s : objs) r.put((String)ObjectX.get(s, field), fast2 ? s.get(field2) : ObjectX.get(s, field2));
         return r;
     }
 
@@ -130,6 +175,23 @@ global class MapX {
             String key = (String)(fast ? s.get(field) : ObjectX.get(s, field));
             if (!r.containsKey(key)) r.put(key, new List<SObject> { s });
             else r.get(key).add(s);
+        }
+        return r;
+    }
+   /**
+    * gets the sobject's strings as set
+    * @param objs the SObjects
+    * @param field the field
+    * @param field2 the field2
+    * @return Map<String, SObject>
+    */
+    global static Map<String, List<Object>> getStringSet(List<SObject> objs, String field, String field2) {
+        Boolean fast = !field.contains('.'), fast2 = !field.contains('.');
+        Map<String, List<Object>> r = new Map<String, List<Object>>();
+        for (SObject s : objs) {
+            String key = (String)(fast ? s.get(field) : ObjectX.get(s, field));
+            if (!r.containsKey(key)) r.put(key, new List<Object> { fast2 ? s.get(field2) : ObjectX.get(s, field2) });
+            else r.get(key).add(fast2 ? s.get(field2) : ObjectX.get(s, field2));
         }
         return r;
     }

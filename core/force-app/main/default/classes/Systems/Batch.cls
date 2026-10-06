@@ -346,6 +346,12 @@ global virtual class Batch implements Database.Batchable<SObject> {
         global Schedule(String query, Action action, Integer batchSize, Boolean allOrNone) { this(query, action); this.batchSize = batchSize; this.allOrNone = allOrNone; }
 
         /**
+        * then
+        * @return Batch 
+        */
+        global Batch.Schedule then(Batch next) { this.next = next; return this; }
+
+        /**
         * run
         * @return String 
         */
@@ -410,6 +416,12 @@ global virtual class Batch implements Database.Batchable<SObject> {
         * @param allOrNone specifies if all or nothing
         */
         global Queue(String query, Action action, Integer batchSize, Boolean allOrNone) { this(query, action); this.batchSize = batchSize; this.allOrNone = allOrNone; }
+
+        /**
+        * then
+        * @return Batch 
+        */
+        global Batch.Queue then(Batch next) { this.next = next; return this; }
 
         /**
         * run

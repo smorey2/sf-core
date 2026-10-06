@@ -175,10 +175,10 @@ global class CloudSfcc extends Cloud {
     //         }
     //     }
     //     catch (Exception e) {
-    //         String errorMessage = e.getMessage() + '\n' + e.getStackTraceString();
-    //         SystemX.debug(errorMessage);
+    //         String msg = e.getMessage() + '\n' + e.getStackTraceString();
+    //         SystemX.debug(msg);
     //         HttpResponse res = new HttpResponse();
-    //         res.setBody(errorMessage);
+    //         res.setBody(msg);
     //         res.setStatusCode(500);
     //         r.add(res);
     //     }

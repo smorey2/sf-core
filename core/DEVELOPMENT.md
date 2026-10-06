@@ -14,7 +14,7 @@ sf package version promote --package "core@1.xx.0-1"
 CREATE PACKAGE
 1. create sandbox
 # sf org delete scratch -o core-dev
-sf org create scratch --duration-days 10 -d -f config/project-scratch-def.json -a core-dev
+sf org create scratch -d -y 10 -f config/project-scratch-def.json -a core-dev -v lahub
 sf limits api display
 
 2. push and run tests

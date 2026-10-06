@@ -5,7 +5,7 @@ global class CloudSpo extends Cloud {
     String endpoint;
     String bucket;
     String clientId;
-    String awsclientSecretSecret;
+    String clientSecret;
 
     /**
     * creates a CloudSpo
@@ -238,7 +238,7 @@ global class CloudSpo extends Cloud {
         HttpRequest req = new HttpRequest();
         req.setMethod('POST');
         req.setEndpoint(endpoint + '/' + key.replaceFirst('\\?|&', '?'));
-        req.setHeader('Host', host);
+        // req.setHeader('Host', host);
         req.setHeader('Content-Encoding', 'UTF-8');
         req.setHeader('Connection', 'keep-alive');
         req.setHeader('X-RequestDigest', digest);

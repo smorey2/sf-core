@@ -35,14 +35,11 @@ global class WebMultiMock implements WebServiceMock {
     * @param responseType the responseType
     */
     global void doInvoke(Object stub, Object request, Map<String, Object> response, String endpoint, String soapAction, String requestName, String responseNS, String responseName, String responseType) {
-        String name, errorMessage;
-        if (variant == null) {
-            name = endpoint + '#' + soapAction;
-            errorMessage = 'Mock not found for endpoint: ' + name;
-        }
+        String name, msg;
+        if (variant == null) { name = endpoint + '#' + soapAction; msg = 'Mock not found for endpoint: ' + name; }
         else throw new HandledException('Unknown variant: ' + variant);
         WebServiceMock mock = mocks.get(name);
         if (mock != null) mock.doInvoke(stub, request, response, endpoint, soapAction, requestName, responseNS, responseName, responseType);
-        else throw new HandledException(errorMessage);
+        else throw new HandledException(msg);
     }
 }

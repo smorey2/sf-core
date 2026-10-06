@@ -243,6 +243,41 @@ class SystemsTest {
 
      //#endregion
 
+     //#region Lookup
+
+     @isTest static void Lookup_getLocation() {
+        Test.startTest();
+        Object actual = Lookup.get.getLocation('Site', 'test', false);
+        Test.stopTest();
+        System.assert(actual != null, 'Should be value');
+     }
+
+     @isTest static void Lookup_getNamedCredential() {
+        Test.startTest();
+        Object actual = Lookup.get.getNamedCredential('first', false);
+        Test.stopTest();
+     }
+
+     @isTest static void Lookup_getPricebook() {
+        Test.startTest();
+        Object actual = Lookup.get.getPricebook('test', false);
+        Test.stopTest();
+     }
+
+     @isTest static void Lookup_getRecordType() {
+        Test.startTest();
+        Object actual = Lookup.get.getRecordType('Account', 'first', false);
+        Test.stopTest();
+     }
+
+     @isTest static void Lookup_flush() {
+        Test.startTest();
+        Lookup.get.flush();
+        Test.stopTest();
+     }
+
+     //#endregion
+
      //#region Reanimater
 
      public class ReanimaterMock extends Reanimater {
@@ -330,36 +365,29 @@ class SystemsTest {
 
      //#endregion
 
-     //#region Scheduler
+     //#region TaskManager
 
-     static SchedulerJob__c[] Scheduler_setup() {
-          SchedulerProvider__c[] providers = new SchedulerProvider__c[] {
-               new SchedulerProvider__c(Name='Throw', ApexAdapter__c='TransferServiceTest', ApexArgs__c='sThrow=exception', Reference__c='Throw'),
-               new SchedulerProvider__c(Name='NoAdapter', ApexAdapter__c='NoAdapter', Reference__c='NoAdapter'),
-               new SchedulerProvider__c(Name='CTest', ApexAdapter__c='TransferServiceTest', Reference__c='CReference'),
-               new SchedulerProvider__c(Name='QTest', ApexAdapter__c='TransferServiceTest', Reference__c='QReference')
+     static Task__c[] TaskManager_setup() {
+          Task__c[] tasks = new Task__c[] {
+               new Task__c(Name='Throw', ApexAdapter__c='TransferServiceTest', ApexArgs__c='sThrow=exception', Reference__c='Throw', State__c='Enabled', CronExpression__c=CRON, CronTriggerId__c=SystemX.fakeId(CronTrigger.SObjectType, 0)),
+               new Task__c(Name='NoAdapter', ApexAdapter__c='NoAdapter', Reference__c='NoAdapter', State__c='Enabled', CronExpression__c=CRON),
+               new Task__c(Name='CTest', ApexAdapter__c='TransferServiceTest', Reference__c='CReference', State__c='Enabled', CronExpression__c=CRON),
+               new Task__c(Name='QTest', ApexAdapter__c='TransferServiceTest', Reference__c='QReference', State__c='Enabled', CronExpression__c='R:5')
           };
-          insert providers;
-          SchedulerJob__c[] schedules = new SchedulerJob__c[] {
-               new SchedulerJob__c(Name='Throw', Provider__c=providers[0].Id, State__c='Enabled', CronExpression__c=CRON, CronTriggerId__c=SystemX.fakeId(CronTrigger.SObjectType, 0)),
-               new SchedulerJob__c(Name='NoAdapter', Provider__c=providers[1].Id, State__c='Enabled', CronExpression__c=CRON),
-               new SchedulerJob__c(Name='CTest', Provider__c=providers[2].Id, State__c='Enabled', CronExpression__c=CRON),
-               new SchedulerJob__c(Name='QTest', Provider__c=providers[3].Id, State__c='Enabled', CronExpression__c='R:5')
-          };
-          insert schedules;
-          return schedules;
+          insert tasks;
+          return tasks;
     }
     
-    @isTest static void Scheduler_all() {
-          SchedulerJob__c[] schedules = Scheduler_setup();
+    @isTest static void TaskManager_all() {
+          Task__c[] tasks = TaskManager_setup();
           Test.startTest();
-          List<String> actual1 = Scheduler.run();
-          List<String> actual2 = Scheduler.run(new Set<Id> { schedules[0].Id }, false);
-          List<String> actual3 = Scheduler.run(schedules[0].Name, false);
-          List<String> actual4 = Scheduler.run(schedules[0].Name, true);
-          List<String> actual5 = Scheduler.run('CTest', true);
-          List<String> actual6 = Scheduler.run('QTest', true);
-          Scheduler.updatex();
+          List<String> actual1 = TaskManager.run();
+          List<String> actual2 = TaskManager.run(new Set<Id> { tasks[0].Id }, false);
+          List<String> actual3 = TaskManager.run(tasks[0].Name, false);
+          List<String> actual4 = TaskManager.run(tasks[0].Name, true);
+          List<String> actual5 = TaskManager.run('CTest', true);
+          List<String> actual6 = TaskManager.run('QTest', true);
+          TaskManager.updatex();
           Test.stopTest();
           System.assertEquals(1, actual1.size(), 'Should be value');
           System.assertEquals(2, actual2.size(), 'Should be value');
@@ -367,14 +395,14 @@ class SystemsTest {
           System.assertEquals(2, actual4.size(), 'Should be value');
      }
 
-    @isTest static void Scheduler_ext() {
-          SchedulerJob__c[] schedules = Scheduler_setup();
-	     ApexPages.StandardSetController controller = new ApexPages.StandardSetController(schedules);
+    @isTest static void TaskManager_ext() {
+          Task__c[] tasks = TaskManager_setup();
+	     ApexPages.StandardSetController controller = new ApexPages.StandardSetController(tasks);
           Test.startTest();
-	     new SchedulerPageExt(controller).run();
+	     new TaskManagerPageExt(controller).run();
           Test.stopTest();
-          System.assert([SELECT CronTriggerId__c FROM SchedulerJob__c WHERE Name = 'CTest' LIMIT 1].CronTriggerId__c != null, 'Should be value');
-          System.assert([SELECT CronTriggerId__c FROM SchedulerJob__c WHERE Name = 'QTest' LIMIT 1].CronTriggerId__c == 'QuickSchedule', 'Should be value');
+          System.assert([SELECT CronTriggerId__c FROM Task__c WHERE Name = 'CTest' LIMIT 1].CronTriggerId__c != null, 'Should be value');
+          System.assert([SELECT CronTriggerId__c FROM Task__c WHERE Name = 'QTest' LIMIT 1].CronTriggerId__c == 'QuickSchedule', 'Should be value');
      }
 
      //#endregion

@@ -28,24 +28,24 @@ global class SystemX {
     * @param level the level
     * @param msg the msg
     */
-    global static void debug(Object msg) { Core.options.debug(LoggingLevel.DEBUG, msg); }
+    global static void debug(Object msg) { CoreOptions.get.debug(LoggingLevel.DEBUG, msg); }
 
     /**
     * writes to the execution debug log
     * @param level the level
     * @param msg the msg
     */
-    global static void debug(LoggingLevel logLevel, Object msg) { Core.options.debug(logLevel, msg); }
+    global static void debug(LoggingLevel logLevel, Object msg) { CoreOptions.get.debug(logLevel, msg); }
 
     /**
     * writes to the execution debug log with multi line
     * @param msg the msg
     */
     global static void debugMulti(Object msg) {
-        if (msg == null) { Core.options.debug(LoggingLevel.DEBUG, 'null'); return; }
+        if (msg == null) { CoreOptions.get.debug(LoggingLevel.DEBUG, 'null'); return; }
         String str = msg.toString();
         Integer l = str.length(), c = 365;
-        for (Integer i = 0; i < l; i += c) Core.options.debug(LoggingLevel.DEBUG, str.substring(i, Math.min(i + c, l)));
+        for (Integer i = 0; i < l; i += c) CoreOptions.get.debug(LoggingLevel.DEBUG, str.substring(i, Math.min(i + c, l)));
     }
 
     /**
